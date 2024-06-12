@@ -1,15 +1,3 @@
-import requests
-import pandas as pd
-from tqdm import tqdm
-
-# Función para obtener el JSON desde un endpoint
-def get_json(url):
-    response = requests.get(url)
-    if response.status_code == 200:
-        return response.json()
-    else:
-        response.raise_for_status()
-
 # Función para extraer los metadatos de los objetos
 def extract_metadata(objects):
     data = []
@@ -65,41 +53,3 @@ def extract_metadata(objects):
         }
         data.append(item)
     return data
-
-# Lista de UUIDs para los items a descargar
-uuids = [
-    '4b005e8d-5527-46a9-bbf0-61ce879432b0',
-    'a11f8b49-0ec6-4769-98df-ab072cd528c2',
-]
-
-# Base URL para la API
-base_url = "https://repositorio.uniandes.edu.co/server/api/discover/search/objects?scope={uuid}&configuration=default&page={page}&size=10"
-
-# DataFrame para almacenar todos los datos
-all_data = []
-
-# Proceso de extracción de datos
-for uuid in uuids:
-    page = 0
-    while True:
-        url = base_url.format(uuid=uuid, page=page)
-        print(f"Fetching data from: {url}")
-        json_data = get_json(url)
-        
-        search_result = json_data['_embedded']['searchResult']
-        objects = search_result['_embedded']['objects']
-        
-        # Extraer los metadatos
-        data = extract_metadata(objects)
-        all_data.extend(data)
-        
-        # Verificar si hay más páginas
-        page_info = search_result['page']
-        if page >= page_info['totalPages'] - 1:
-            break
-        page += 1
-
-# Crear un DataFrame y exportarlo a CSV
-df = pd.DataFrame(all_data)
-df.to_csv('repositorio_uniandes_data.csv', index=False)
-print("Datos exportados a repositorio_uniandes_data.csv")
