@@ -61,4 +61,4 @@ uuids = [
     '4b005e8d-5527-46a9-bbf0-61ce879432b0' # Ingeniería
 ]
 
-fetch_data(uuids, max_pages=5)  # Descarga las primeras 5 páginas
+fetch_data(uuids)  # Descarga las primeras 5 páginas
