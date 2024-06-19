@@ -7,6 +7,7 @@ from src.utils.utils import get_json
 def get_bitstream_info(uuid):
     base_url = f"https://repositorio.uniandes.edu.co/server/api/core/items/{uuid}/bundles"
     bundles = get_json(base_url)["_embedded"]["bundles"]
+    bitstream_url, file_name = None, None
     for bundle in bundles:
         if bundle['name'] == 'TEXT':
             bitstreams_url = bundle['_links']['bitstreams']['href']
